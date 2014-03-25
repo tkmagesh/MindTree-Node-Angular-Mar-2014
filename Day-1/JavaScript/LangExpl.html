@@ -37,10 +37,143 @@
 			//Assert
 			return result === expectedResult;
 		});
+		test("should be able to add 2 numbers in string format",function(){
+			//Arrange
+			var number1 = "10"
+				,number2 = "20"
+				,expectedResult = 30;
+
+			//Act
+			var result = sum(number1,number2);
+
+			//Assert
+			return result === expectedResult;
+		});
+		test("should be able to add non number strings",function(){
+			//Arrange
+			var number1 = "a"
+				,number2 = "b"
+				,expectedResult = 0;
+
+			//Act
+			var result = sum(number1,number2);
+
+			//Assert
+			return result === expectedResult;
+		});
+		test("should be able add more than 2 numbers",function(){
+			//Arrange
+			var number1 = 10
+				,number2 = 20
+				,number3 = 30
+				,expectedResult = 60;
+
+			//Act
+			var result = sum(number1,number2,number3);
+
+			//Assert
+			return result === expectedResult;
+		});
+		test("should be able to accept functions returning numbers",function(){
+			//Arrange
+			var f1 = function(){ return 10;}
+				,f2 = function() { return 20;}
+				,expectedResult = 30;
+			
+
+			//Act
+			var result = sum(f1,f2);
+
+			//Assert
+			return result === expectedResult;
+		});
+		test("should be able to accept functions returning function returning numbers",function(){
+			//Arrange
+			var f1 = function(){ return function(){ return 10;}}
+				,f2 = function(){return function() { return 20;}}
+				,expectedResult = 30;
+			
+
+			//Act
+			var result = sum(f1,f2);
+
+			//Assert
+			return result === expectedResult;
+		});
+		test("should be able to accept an array of numbers",function(){
+			//Arrange
+			var numbers = [10,20,30]
+				,expectedResult = 60;
+			
+
+			//Act
+			var result = sum(numbers);
+
+			//Assert
+			return result === expectedResult;
+		});
+		test("should be able to accept more than one array of numbers",function(){
+			//Arrange
+			var numbers1 = [10,20,30]
+				,numbers2 = [10,20,30]
+				,expectedResult = 120;
+			
+
+			//Act
+			var result = sum(numbers1,numbers2);
+
+			//Assert
+			return result === expectedResult;
+		});
+		test("should be able to accept functions returning array of numbers",function(){
+			//Arrange
+			var f1 = function(){ return [10,20,30];}
+				,f2 = function(){ return [10,20,30];}
+				,expectedResult = 120;
+			
+
+			//Act
+			var result = sum(f1,f2);
+
+			//Assert
+			return result === expectedResult;
+		});
+		test("should be able to accept functions returning function returning array of numbers",function(){
+			//Arrange
+			var f1 = function(){ return function(){ return [10,20,30];}}
+				,f2 = function(){return function() { return [10,20,30];}}
+				,expectedResult = 120;
+			
+
+			//Act
+			var result = sum(f1,f2);
+
+			//Assert
+			return result === expectedResult;
+		});
+		test("should be able to accept array of functions returning function returning array of numbers",function(){
+			//Arrange
+			var f1 = function(){ return function(){ return [10,20,30];}}
+				,f2 = function(){return function() { return [10,20,30];}}
+				,expectedResult = 120;
+			
+
+			//Act
+			var result = sum([f1,f2]);
+
+			//Assert
+			return result === expectedResult;
+		});
 	}
 
-	function sum(x,y){
-		return x + y;
+	function sum(){
+		function parseArg(n){
+			if (typeof n === "function") return parseArg(n());
+			if (!isNaN(n)) return parseInt(n);
+			if (Array.isArray(n)) return sum.apply(this,n);
+			return 0;
+		}
+		return arguments.length <= 1 ? parseArg(arguments[0]) : parseArg(arguments[0]) + sum([].slice.call(arguments,1));
 	}
 	</script>
 </head>

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script>
+	(function(){
+		var counter = 0;
+		function init(){
+			document.getElementById("btnCount").addEventListener("click",onBtnCountClick);
+		}
+		function onBtnCountClick(){
+			counter++;
+			displayCounter();
+		}
+		function displayCounter(){
+			document.getElementById("divMessage").innerHTML = counter;
+		}
+		window.addEventListener("DOMContentLoaded",init);
+	})();
+	
+	</script>
+</head>
+<body>
+	<input type="button" value="Count" id="btnCount">
+	<div id="divMessage"></div>
+</body>
+</html>
