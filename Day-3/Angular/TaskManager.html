@@ -3,31 +3,58 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Task Manager</title>
+	<style>
+	.completed {
+		color :red;
+		text-decoration: line-through;
+		font-style: italic;
+	}
+	</style>
 	<script src="angular.js"></script>
 	<script>
-	function TaskController($scope){
-		$scope.Task = {
-			newTask : '',
-			tasks : [],
-			addTask : function(taskName){
-				this.tasks.push(taskName);
-			}
-		};
-	}
+	angular
+		.module('TaskApp',[])
+		.controller('TaskController',['$scope','$http',function ($scope,$http){
+			$scope.Task = {
+				tasks : [],
+				addTask : function(taskName){
+					var newTaskId = this.tasks.length === 0 ? 1 : this.tasks.reduce(function(t1,t2){
+						return t1.id > t2.id ? t1.id : t2.id
+					}) + 1;
+					console.dir($http);
+					newTask = {
+
+						id : newTaskId,
+						name : taskName,
+						isCompleted : false,
+						toggleCompletion : function(){
+							this.isCompleted = !this.isCompleted;
+						}
+					};
+					this.tasks.push(newTask);
+				},
+				removeCompleted : function(){
+					for(var i=this.tasks.length-1;i>=0;i--)
+						if (this.tasks[i].isCompleted)
+							this.tasks.splice(i,1);
+				}
+			};
+		}]);
 	</script>
 </head>
-<body ng-app>
+<body ng-app="TaskApp">
 	<h1>Task Manager</h1>
 	<hr>
 	<div data-ng-controller="TaskController">
 		<span>Task :</span>
 		<input type="text" name="" id="" data-ng-model="Task.newTask">
 		<button data-ng-click="Task.addTask(Task.newTask)">Add Task</button>
-		<button>Remove Completed</button>
+		<button data-ng-click="Task.removeCompleted()">Remove Completed</button>
 		<ul>
-			<li data-ng-repeat="t in Task.tasks">{{t}}</li>
+			<li data-ng-class="{completed : t.isCompleted}" data-ng-repeat="t in Task.tasks" data-ng-click="t.toggleCompletion()">{{t.name}}</li>
 		</ul>
-		<div>{{Task.tasks.length}} Tasks are found!!</div>
+
+		<div data-ng-hide="Task.tasks.length <= 0">{{Task.tasks.length}} Tasks are found!!</div>
 	</div>
 </body>
 </html>
