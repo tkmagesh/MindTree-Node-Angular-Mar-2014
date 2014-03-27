@@ -1,0 +1,18 @@
+doctype html
+html
+  head
+    title= 'Tasks'
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src='/javascripts/jquery-1.11.0.js')
+    script(src='/javascripts/tasks.js')
+  body
+    h1= title
+    p Welcome to #{title}
+    p There are #{tasks.length} tasks in the list
+    form(method='post', action='/tasks/add')
+      span= 'Task :'
+      input#txtTask(type='text', name='taskName')
+      input#btnAdd(type='button', name='btnAdd', value='Add Task')
+    ul#ulTaskList
+      each task in tasks
+        li #{task.name}
