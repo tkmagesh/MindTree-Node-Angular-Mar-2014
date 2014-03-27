@@ -19,6 +19,9 @@ function serveFile(filename,res, reqData){
 			cache[filename].isDirty = true;
 		});
 		var stream = fs.createReadStream(filename,{encoding : "utf8"});
+		
+		//stream.pipe(res);
+		
 		var data = '';
 		stream.on("data",function(dataChunk){
 			data += dataChunk;
